@@ -5,12 +5,11 @@ import Sidebar from './components/Sidebar';
 import TabPanel from './components/TabPanel';
 import Terminal from './components/Terminal';
 
-import AsciiBackground from './components/AsciiBackground';
-
-
 export type Tab = {
   fileName: string;
-  content: string;
+  content?: string;
+  type?: 'component';
+  component?: string;
 };
 
 export default function Home() {
@@ -38,33 +37,37 @@ export default function Home() {
   };
 
   const activeContent = tabs.find(t => t.fileName === activeTab)?.content || '';
+  const activeTabData = tabs.find(t => t.fileName === activeTab);
 
   return (
-    
-    <div>
-      <AsciiBackground />
-      <main>
-        <h1>Web Engineer & Creative Coder</h1>
-        {/* Your content here */}
-      </main>
+    <div className="fixed inset-0 flex bg-[#1e1e1e] text-gray-100 overflow-hidden">
+      <Sidebar onOpenTab={handleOpenTab} />
+      <div className="flex flex-col flex-grow">
+        <TabPanel
+          tabs={tabs}
+          activeTab={activeTab}
+          activeContent={activeContent}
+          activeTabData={activeTabData}
+          onCloseTab={handleCloseTab}
+          setActiveTab={setActiveTab}
+        />
+        <Terminal />
+      </div>
     </div>
-    // <div className="flex h-screen bg-[#1e1e1e] text-gray-100 overflow-hidden">
-      
-    //   <Sidebar onOpenTab={handleOpenTab} />
-    //   <div className="flex flex-col flex-grow">
-    //     <TabPanel
-    //       tabs={tabs}
-    //       activeTab={activeTab}
-    //       activeContent={activeContent}
-    //       onCloseTab={handleCloseTab}
-    //       setActiveTab={setActiveTab}
-    //     />
-    //     <Terminal />
-    //   </div>
-    // </div>
   );
 }
 
 
 
 // https://finethought.com.au/
+
+
+    
+    // <div>
+    //   <AsciiBackground />
+    //   <main>
+    //     <h1>Web Engineer & Creative Coder</h1>
+    //     {/* Your content here */}
+    //   </main>
+    // </div>
+

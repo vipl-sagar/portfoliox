@@ -4,6 +4,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-yaml';
 import 'prismjs/components/prism-bash';
+import PerlinMountains from './PerlinMountains';
 
 import { Tab } from "../page";
 
@@ -11,17 +12,16 @@ type TabPanelProps = {
   tabs: Tab[];
   activeTab: string;
   activeContent: string;
+  activeTabData?: Tab;
   onCloseTab: (fileName: string) => void;
   setActiveTab: (fileName: string) => void;
-  
 };
-
-
 
 export default function TabPanel({
   tabs,
   activeTab,
   activeContent,
+  activeTabData,
   onCloseTab,
   setActiveTab
 }: TabPanelProps) {
@@ -43,6 +43,30 @@ export default function TabPanel({
     }
   }
 
+  const renderContent = () => {
+    if (activeTabData?.type === 'component') {
+      switch (activeTabData.component) {
+        case 'PerlinMountains':
+          return (
+            <div className="w-full h-full bg-black">
+              <div className="w-full h-full">
+                <PerlinMountains />
+              </div>
+            </div>
+          );
+        default:
+          return <div>Unknown component</div>;
+      }
+    }
+
+    return (
+      <pre className="p-6 font-mono text-sm">
+        <code className={`language-${getLanguage(activeTab)}`}>
+          {activeContent}
+        </code>
+      </pre>
+    );
+  };
 
   return (
     <div className="flex flex-col flex-grow bg-[#1e1e1e]">
@@ -71,21 +95,10 @@ export default function TabPanel({
         ))}
       </div>
 
-      <pre className="p-6 font-mono text-sm">
-  <code className={`language-${getLanguage(activeTab)}`}>
-    {activeContent}
-  </code>
-</pre>
-
       {/* Editor Content */}
       <div className="flex-grow overflow-auto">
         {tabs.length > 0 ? (
-          <div 
-            className="p-6 font-mono text-sm whitespace-pre-wrap text-gray-300"
-           
-            
-          />
-          
+          renderContent()
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500">
             No open files

@@ -21,6 +21,13 @@ export default function Sidebar({ onOpenTab }: SidebarProps) {
       icon: '📦',
       type: 'folder',
       items: [
+        { 
+          name: 'Perlin Mountains', 
+          file: 'perlinMountains.tsx', 
+          type: 'component',
+          component: 'PerlinMountains',
+          icon: '🎨'
+        },
         { name: 'Black Fridge', file: 'black-fridge.md', content: 'DYE YOUR CLOTHES.\nSAVE THE PLANET.' },
         { name: 'Task Part', file: 'task-part.md', content: 'Project details...' }
       ]
@@ -55,6 +62,21 @@ export default function Sidebar({ onOpenTab }: SidebarProps) {
 
   const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
 
+  const handleItemClick = (item: any) => {
+    if (item.type === 'component') {
+      onOpenTab({
+        fileName: item.file,
+        type: 'component',
+        component: item.component
+      });
+    } else {
+      onOpenTab({
+        fileName: item.file,
+        content: item.content
+      });
+    }
+  };
+
   return (
     <div className="flex h-full font-mono text-sm">
       {/* Activity Bar (Icons only) */}
@@ -87,10 +109,7 @@ export default function Sidebar({ onOpenTab }: SidebarProps) {
             <div key={item.file}>
               <button
                 className="flex items-center w-full text-left py-1.5 px-2 hover:bg-[#2a2d2e] rounded-md text-[#CCCCCC] hover:text-white transition-colors duration-200 group"
-                onClick={() => onOpenTab({
-                  fileName: item.file,
-                  content: item.content
-                })}
+                onClick={() => handleItemClick(item)}
               >
                 <span className="mr-2 text-[#858585]">{item.icon}</span>
                 <span>{item.name}</span>
@@ -104,12 +123,9 @@ export default function Sidebar({ onOpenTab }: SidebarProps) {
                 <button
                   key={nested.file}
                   className="flex items-center w-full text-left py-1 pl-8 pr-2 hover:bg-[#2a2d2e] rounded-md text-[#858585] hover:text-white transition-colors duration-200"
-                  onClick={() => onOpenTab({
-                    fileName: nested.file,
-                    content: nested.content
-                  })}
+                  onClick={() => handleItemClick(nested)}
                 >
-                  <span className="mr-2">📄</span>
+                  <span className="mr-2">{nested.icon || '📄'}</span>
                   {nested.name}
                 </button>
               ))}
